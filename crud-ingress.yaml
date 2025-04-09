@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: crud-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /  # Reescritura de ruta
+spec:
+  rules:
+  - host: crud.midominio.com  # Hostname para acceder
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: crud-service
+            port:
+              number: 80
