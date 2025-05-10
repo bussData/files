@@ -1,0 +1,34 @@
+ms-evento (crud)
+    Evento 
+    id
+    descripcion
+    fechaEvento
+    ubicacion
+    capacidad
+ 
+ 
+ms-participantes
+    Participante
+    id
+    nombre
+    apellidos
+ 
+    Inscripcion
+    idParticipante
+    idEvento
+ 
+ 
+    post (/api2/inscriciones/) {idParticipante, idEvento}
+    Permitir a los participantes inscribirse en eventos existentes.
+        feign
+        Validar que el evento al que se intenta inscribir el participante existe (consultando el Microservicio 1).
+        Registrar las inscripciones en una base de datos y almacenar únicamente el ID del evento (no duplicar información).
+        Capacidad máxima del evento.
+        Evitar duplicados en las inscripciones para un mismo participante y evento.
+ 
+    get (/api2/incripciones/participante/{id})
+    Listar todas las inscripciones realizadas por un participante.
+
+https://github.com/rtineo/ms-participantes.git
+https://github.com/rtineo/ms-eventos.git
+https://netec-mx.github.io/DOCK_KUB_INT/Unidad1/README1_5.html

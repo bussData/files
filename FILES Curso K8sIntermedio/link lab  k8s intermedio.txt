@@ -1,0 +1,42 @@
+
+
+ADD
+FROM
+CMD
+COPY
+WORKDIR
+VOLUME
+EXPOSE
+ENTRYPOINT
+RUN
+
+Ana Teresa Rey Gonzales
+	
+x250414dockkubintlim1025516751004.centralus.cloudapp.azure.com:61472
+
+Soporte para solicitar mas tiempo de labs: soporte@netec.com.mx
+ 
+ 
+ https://netec-mx.github.io/DOCK_KUB_INT/
+
+
+--Subir al repo:
+docker login
+ 
+--crear imagen en local:
+docker build -t ms-productos:1.0 .
+docker build -t ms-deseos:1.0 .
+
+
+--subir al repo:
+
+EJM:
+ESTRUCTURA: docker tag imagenlocal:version nombrerepositorio:nombredelaimagenasubir-version
+EJEMPLO: docker tag ms-productos:1.0 jpas01/kubernetes:ms-productos-v1.0
+ 
+ESTRUCTURA: docker push nombrerepositorio:nombredelaimagenasubir-version
+EJEMPLO: docker push jpas01/kubernetes:ms-productos-v1.0
+
+
+--si se mapean parametros de definicion en el docker compose para mongobd:
+https://www.mongodb.com/community/forums/t/credentials-with-docker-compose/255648

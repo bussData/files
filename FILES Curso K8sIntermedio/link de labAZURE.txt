@@ -1,0 +1,230 @@
+LAB:
+https://labs.azure.com/register/mhomqfs3g
+
+Reomendar el uso de los laboratorios por medio de un conexión a internet por medio de cable y sin algúna VPN Activa.
+Todos los participantes de la clase cuentan con 20 hrs asignadas para ser utilizadas fuera del horario de clase, en caso de requerir iniciar la maquina fuera del horario de clase deberán ingresar al portal: https://labs.azure.com con el correo previamente registrado.
+Los equipos se han optimizado para que los participantes tengan completa autonomía y puedan realizar las prácticas en el horario que ellos decidan, los equipos cuentan con la programación de apagado y desconexión automáticos lo que implica que después de los siguientes parámetros dentro o fuera de la clase los equipos se apagarán.
+30 minutos después de detectar el estado inactivo
+30 minutos después de que el usuario se desconecte
+30 minutos después de encender la máquina
+Los Accesos se eliminarán el Jueves 27 Marzo de 2025
+ 
+Azure Lab Services
+ 
+
+
+Instructivo LAB:
+https://netec-mx.github.io/DOCK_KUB_BAS-Priv-/
+
+La version de Windows se cheka en Este equipo/ propiedades/ Version y OS build (debajo de la version windows lo indica)
+
+--Verificar version Docker (en cmd):
+docker --version
+
+http://hub.docker.com/_/ubuntu --> libreria de descarga de imagen ubuntu
+
+--lista de imagenes de SO en docker (en cmd):
+docker images
+
+--registry se monta sobre un contenedor propio y se jala para crear imagenes en otros contenedores.
+eso cuando no se quiera pagar el registry
+
+--lista de containers en ejecucion(en cmd):
+docker ps
+
+--lista de containers en ejecucion y detenidos(en cmd):
+docker ps -a
+
+--correr el container con nombre ubuntulatest de imagen ubuntu
+docker run -d --name ubuntulatest ubuntu 
+
+--con puertos: puertoHost:puertoContenedor
+docker run -d -p 8080:80 --name ubuntuultimo2 ubuntu
+
+--borrar imagenes(permit borrar siempre q nadie lo use) 
+docker rm <container_id>
+docker rmi <container_image>
+
+--borrar imagener con forzado:
+docker rmi --force ubuntu
+
+
+dentro del worker:(gitbash)
+ssh wnadmin@192.168.0.103
+
+--consulta del ambiente:
+uname -r
+
+--realizar actualizacion del ambiente (primero act de libs y luego actualizacion de ambiente)
+sudo apt update
+sudo apt upgrade
+
+
+Nota:si se instala con usuario root, el demonio va a funcionar solo con el root
+NOTA: docker en linux requiere permisos elevados en el grupo docker, este grupo se crea por defecto al instalar docker para los permisos:
+sudo usermod -aG docker <usuario>
+
+--instalar dependencia docker:  
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+--agregar la clave de docker y el repositorio:
+//////curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+--agregar el repositorio:
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs)     stable"
+
+--actualizar de nuevo e instalar Docker:
+ sudo apt update
+ apt-cache policy docker-ce
+ sudo apt install docker-ce
+
+--verificar docker:
+ sudo systemctl status docker
+
+--verificar version docker:
+docker --version
+
+--id el usuario para dar permisos al grupo docker:(requiere reinicio)
+id -nG
+sudo usermod -aG docker <usuario>
+
+--verificamos:
+cat /etc/group
+
+--reinicio de sesion:
+sudo reboot
+
+--cotejamos el container:
+docker ps
+
+--cotejamos informacion gral de docker:
+docker info
+
+
+--logeo por docker
+docker login
+
+
+--crear imagenes
+docker run --name demo1 -d ubuntu
+docker run --name demo2 --publish 80:80 -d nginx
+docker run --name demo3 -v /mi/data:/data -d ubuntu
+docker run --name demo4 -it ubuntu bash
+docker run --name demo5 -e "MI_VARIABLE=555" -d ubuntu
+docker run --name demo6 --detach --rm -p 8888:8080 tomcat:9.0
+
+--ver logs en vivo <containerName>
+docker logs -f demo2
+
+--ejecutar en segundo plano esperando
+sudo docker run --name demo3b -v /mi/data:/data -d ubuntu sleep infinity
+
+--eliminar lo que no se use (con status Exited)
+docker container prune
+
+
+--repo git del docente
+https://github.com/Netec-Mx/DOCK_KUB_BAS-Priv-/tree/main
+https://github.com/Netec-Mx/DOCK_KUB_BAS-Priv-.git
+
+UNIDAD 1.4 -> para compilar mvn clean package
+
+se puede mapear diferentes puertos host(local) a un solo puerto en el contenedor
+-p 8095:9095
+puerto host: puerto container
+
+
+
+--Logeo de docker dashboard
+docker login
+
+--deslogeo:
+docker logout
+
+--creacion de 1 imagen:
+docker run -d -p 5000:5000 --name registry registry:2
+
+--taglear imagen local para registry local:
+docker tag ubuntu:latest localhost:5000/ubuntu:1.1
+
+para el tag se recomienda usar números.
+
+--para listar en el Registry Local los repositorios que usan la uri:
+curl -X GET http://localhost:5000/v2/backend-app/tags/list
+
+
+
+--actividad k8s, correccion verificacion 5. Validar que el nodo puede ejecutar pods
+kubectl run nginx-test --image=nginx --restart=Never \
+  --overrides='{"spec": {"nodeSelector": {"kubernetes.io/hostname": "worker1"}}}'
+
+--incorporar permisos al puerto 
+sudo iptables -L -n | grep 6443
+
+--ver estado del containerd:
+containerd --version
+
+--regenerar el archivo:
+sudo mkdir -p /etc/containerd
+containerd config default | sudo tee /etc/containerd/config.toml
+
+
+--conectar y copiar en local:
+scp mnadmin@192.168.0.101:/home/mnadmin/.kube/config C:\Users\Netec\.kube\config
+
+
+--habilitar puerto externo 8080 para escuchar el nginx
+kubectl port-forward pod/my-pod 8080:80
+
+
+kubectl get pods -n kube-system
+
+ 
+--reinicio de daemonset y deployments:
+kubectl rollout restart daemonset/calico-node -n kube-system
+kubectl rollout restart deployment/calico-kube-controllers -n kube-system
+
+ 
+
+--reinicio de servicio calico-node en el nodo:
+sudo systemctl restart calico-node
+
+--borrar pods de calico:
+kubectl delete pod -n kube-system -l k8s-app=calico-node
+
+
+--aplicar deployment:
+kubectl apply -f backend-deployment.yaml
+
+
+--consultar pods
+kubectl get pods -l app=backend
+
+--aplicar statefulset:
+kubectl apply -f statefulset.yaml
+
+--comando para listar todos los recursos 
+kubectl get all --all-namespaces
+ 
+--ver todos los tipos de recursos disponibles:
+kubectl api-resources
+ 
+--todos los recursos que no incluye get all:
+kubectl get $(kubectl api-resources --verbs=list --namespaced -o name | paste -sd, -) --all-namespaces
+
+
+https://kubernetes.io/docs/concepts/configuration/secret/
+
+ kubectl exec -it pvc-pod -- sh
+ 
+kubectl get ns development -o json | jq '.spec.finalizers'
+
+kubectl delete ingress multi-host-ingress
+
+kubectl delete deployment app1-servicio app2-servicio
+
+kubectl delete svc app1-servicio app2-servicio
+ 
+ 
